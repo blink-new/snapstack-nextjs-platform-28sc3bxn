@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { EncryptionService } from '@/lib/encryption';
+import { hashPassword } from '@/lib/encryption';
 import { z } from 'zod';
 
 const signupSchema = z.object({
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Hash password
-    const hashedPassword = EncryptionService.hash(password);
+    const hashedPassword = await hashPassword(password);
 
     // Create user
     const user = await prisma.user.create({
